@@ -2,4 +2,4 @@
 Contributors
 ============
 
-* gnillev <mnvdk0@gmail.com>
+* Mathias Nisted Velling <mnvdk0@gmail.com>
