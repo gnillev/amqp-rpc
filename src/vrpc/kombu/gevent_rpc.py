@@ -1,6 +1,7 @@
 from typing import MutableMapping, Any, Optional
 
-from gevent.event import Event, AsyncResult, Timeout
+from gevent.event import Event, AsyncResult
+from gevent.timeout import Timeout
 from kombu import Connection
 
 from vrpc.typing import Result as TResult
@@ -12,10 +13,10 @@ class Result(TResult):
     def __init__(self):
         self.async_result = AsyncResult()
 
-    def result(self, timeout: Optional[float]) -> Any:
+    def result(self, timeout: Optional[float] = None) -> Any:
         return self.async_result.result(timeout)
 
-    def exception(self, timeout: Optional[float]) -> Optional[Exception]:
+    def exception(self, timeout: Optional[float] = None) -> Optional[Exception]:
         try:
             self.async_result.get(timeout=timeout)
         except Timeout:
@@ -48,3 +49,6 @@ class RPC:
     def _callback(self, correlation_id, body):
         result = self._awaiting_results.pop(correlation_id)
         result.set_result(body)
+
+    def _drain(self):
+        pass

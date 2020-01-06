@@ -27,14 +27,15 @@ class SimpleResponderService:
     def respond(self, message: Message):
         body = message.body
         properties = message.properties
-        message.ack()  # For test/example, ack early
         print(f"Received message: {body}")
 
         reply_to = properties.get('reply_to')
         if reply_to:
             response = f"Reply: {body}"
+            correlation_id = properties.get('correlation_id')
             print(f"Replying to {reply_to}")
-            self.producer.publish(response, reply_to, **properties)
+            self.producer.publish(response, reply_to, correlation_id=correlation_id)
+        message.ack()
 
 
 if __name__ == "__main__":
