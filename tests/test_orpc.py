@@ -1,6 +1,6 @@
 
-import orpc
+import vrpc
 
 
 def test_version():
-    version = orpc.__version__
+    version = vrpc.__version__

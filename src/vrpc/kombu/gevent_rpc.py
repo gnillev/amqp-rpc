@@ -3,7 +3,7 @@ from typing import MutableMapping, Any, Optional
 from gevent.event import Event, AsyncResult, Timeout
 from kombu import Connection
 
-from orpc.typing import Result as TResult
+from vrpc.typing import Result as TResult
 from .rpc import BaseRPC
 
 
