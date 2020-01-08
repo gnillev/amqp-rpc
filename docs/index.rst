@@ -1,8 +1,8 @@
 ====
-orpc
+vrpc
 ====
 
-This is the documentation of **orpc**.
+This is the documentation of **vrpc**.
 
 .. note::
 
