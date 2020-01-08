@@ -52,7 +52,7 @@ class BaseRPC:
         for callback in self.callbacks:
             callback(correlation_id, body)
 
-    def _drain_message(self, timeout=None):
+    def drain_message(self, timeout=None):
         """ Drain a single event from the connection. """
         self.connection.drain_events(timeout=timeout)
 
@@ -73,7 +73,7 @@ class SimpleRPC(BaseRPC):
                 new_timeout = timeout - delta
             else:
                 new_timeout = None
-            self._drain_message(new_timeout)
+            self.drain_message(new_timeout)
 
         return self.results[correlation_id]  # we should pop?
 

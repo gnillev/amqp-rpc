@@ -1,6 +1,8 @@
+import socket
 from typing import MutableMapping, Any, Optional
 
-from gevent.event import Event, AsyncResult
+import gevent
+from gevent.event import AsyncResult
 from gevent.timeout import Timeout
 from kombu import Connection
 
@@ -40,6 +42,9 @@ class RPC:
         self.rpc.add_callback(self._callback)
         self._awaiting_results = {}
 
+        self._should_stop = False
+        self._gevent = gevent.spawn(self._consumer_run)
+
     def call(self, message: str, routing_key: str, properties: MutableMapping[str, str] = None) -> Result:
         correlation_id = self.rpc.call(message, routing_key, properties)
         result = Result()
@@ -50,5 +55,9 @@ class RPC:
         result = self._awaiting_results.pop(correlation_id)
         result.set_result(body)
 
-    def _drain(self):
-        pass
+    def _consumer_run(self):
+        while not self._should_stop:
+            try:
+                self.rpc.drain_message(0.1)
+            except socket.timeout:
+                gevent.sleep(0)
